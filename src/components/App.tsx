@@ -1,29 +1,23 @@
 import React, { useState } from 'react';
-import { eventNames } from 'process';
-
-type FruitProps = {
-  name: string,
-  taste: string,
-  texture: string
-}
+import { Fruits, Fruit } from './Types';
 
 const App = () => {
-
   const [fruit, setFruit] = useState({
     name: '',
     taste: '',
     texture: ''
-  });
-  const [fruitList, setFruitList] = useState(Array());
+  }
+  );
+  const [fruitList, setFruitList] = useState([] as Fruits);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: { target: { value: any; name: any; }; }) => {
     const value = e.target.value;
     setFruit({
       ...fruit,
       [e.target.name]: value
     });
   }
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setFruitList([
       ...fruitList,
@@ -39,6 +33,10 @@ const App = () => {
       texture: ''
     });
   }
+  const deleteFruit = (fruit: Fruit) => (e: any) => {
+    setFruitList(fruitList
+      .filter(otherFruit => otherFruit !== fruit));
+  }
 
   return (
     <div>
@@ -50,6 +48,7 @@ const App = () => {
           value={fruit.name}
           autoComplete='off'
           onChange={handleChange} />
+        <br />
 
         <label>How does it taste?</label>
         <input
@@ -58,6 +57,7 @@ const App = () => {
           value={fruit.taste}
           autoComplete='off'
           onChange={handleChange} />
+        <br />
 
         <label>What is the texture like?</label>
         <input
@@ -66,6 +66,7 @@ const App = () => {
           value={fruit.texture}
           autoComplete='off'
           onChange={handleChange} />
+        <br />
 
         <button>LOG THIS FRUIT</button>
       </form>
@@ -78,13 +79,14 @@ const App = () => {
               Taste: {fruit.taste} <br />
               Texture: {fruit.texture}
             </li>
+            <button onClick={deleteFruit(fruit)}>Delete fruit</button>
             <br />
           </div>
         ))}
       </ul>
     </div>
   )
-}
 
+}
 
 export default App;
